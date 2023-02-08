@@ -25,6 +25,9 @@ public class CustomEntity {
     @Value("${custom.sql.accountsn}")
     private String selectAccountSn;
 
+    @Value("{custom.sql.loanAccountSn}")
+    private String updateLoanQuery;
+
     public List<String> getAccoutSn(String accountReference) throws SQLException {
         ResultSet resultSet = connector.connection(selectAccountSn, QueryType.SELECT, true, List.of(accountReference));
         List<String> results = new ArrayList<>();
@@ -39,6 +42,10 @@ public class CustomEntity {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = formatter.format(disbursementDate);
         connector.connection(disbursementDateQuery, QueryType.UPDATE, true, List.of(dateString,String.valueOf(accountSn)));
+    }
+
+    public void updateLoansWithAccountSn(int loanSn, int accountSn) throws SQLException {
+        connector.connection(updateLoanQuery, QueryType.UPDATE, true,List.of(String.valueOf(accountSn), String.valueOf(loanSn)));
     }
 
 
