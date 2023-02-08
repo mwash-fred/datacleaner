@@ -25,7 +25,7 @@ public class CustomEntity {
     @Value("${custom.sql.accountsn}")
     private String selectAccountSn;
 
-    @Value("{custom.sql.loanAccountSn}")
+    @Value("${custom.sql.loanAccountSn}")
     private String updateLoanQuery;
 
     public List<String> getAccoutSn(String accountReference) throws SQLException {
