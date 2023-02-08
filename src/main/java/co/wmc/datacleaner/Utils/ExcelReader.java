@@ -17,7 +17,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 
-@Component @Slf4j
+@Component
+@Slf4j
 public class ExcelReader {
 
     @Value("${file.upload.store}")
@@ -32,49 +33,49 @@ public class ExcelReader {
         Workbook workbook = WorkbookFactory.create(convFile);
         //iterating over rows and columns
         Sheet sheet = workbook.getSheetAt(0);
-        Map<String, Object> accountsList= new HashMap<>();
+        Map<String, Object> accountsList = new HashMap<>();
         int count = 0;
         for (Row row : sheet) {
             if (isRowEmpty(row)) continue;
-                Function<Cell, String> stringValues = (cell) -> {
-                    if (Objects.isNull(cell)) return null;
-                    switch (cell.getCellType()) {
-                        case STRING -> {
-                            return cell.getStringCellValue();
-                        }
-                        case NUMERIC -> {
-                            int num = (int) cell.getNumericCellValue();
-                            return String.valueOf(num);
-                        }
-                        case BOOLEAN -> {
-                            return String.valueOf(cell.getBooleanCellValue());
-                        }
-                        default -> {
-                            return null;
-                        }
+            Function<Cell, String> stringValues = (cell) -> {
+                if (Objects.isNull(cell)) return null;
+                switch (cell.getCellType()) {
+                    case STRING -> {
+                        return cell.getStringCellValue();
                     }
+                    case NUMERIC -> {
+                        int num = (int) cell.getNumericCellValue();
+                        return String.valueOf(num);
+                    }
+                    case BOOLEAN -> {
+                        return String.valueOf(cell.getBooleanCellValue());
+                    }
+                    default -> {
+                        return null;
+                    }
+                }
+            };
+
+            Function<Cell, Double> numericValues = (cell) -> {
+                if (Objects.isNull(cell)) return null;
+                return switch (cell.getCellType()) {
+                    case STRING -> Double.valueOf(cell.getStringCellValue());
+                    case NUMERIC -> cell.getNumericCellValue();
+                    default -> null;
                 };
+            };
 
-                Function<Cell, Double> numericValues = (cell) -> {
-                    if (Objects.isNull(cell)) return null;
-                    return switch (cell.getCellType()) {
-                        case STRING -> Double.valueOf(cell.getStringCellValue());
-                        case NUMERIC -> cell.getNumericCellValue();
-                        default -> null;
-                    };
-                };
+            Function<Cell, Date> dateValues = (cell) -> {
+                if (Objects.isNull(cell)) return null;
+                if (DateUtil.isCellDateFormatted(cell)) return cell.getDateCellValue();
+                return null;
+            };
 
-                Function<Cell, Date> dateValues = (cell) -> {
-                    if (Objects.isNull(cell)) return null;
-                    if (DateUtil.isCellDateFormatted(cell)) return cell.getDateCellValue();
-                    return null;
-                };
+            log.info("Value {}", sheet.getRow(count).getCell(CellReference.convertColStringToIndex("B")).getCellType());
 
-                log.info("Value {}", sheet.getRow(count).getCell(CellReference.convertColStringToIndex("B")).getCellType());
-
-                String loanSn = String.valueOf(numericValues.apply(sheet.getRow(count).getCell(CellReference.convertColStringToIndex("A"))));
-                Double accountSn = numericValues.apply(sheet.getRow(count).getCell(CellReference.convertColStringToIndex("B")));
-                accountsList.put(loanSn, accountSn);
+            String loanSn = String.valueOf(numericValues.apply(sheet.getRow(count).getCell(CellReference.convertColStringToIndex("A"))));
+            Double accountSn = numericValues.apply(sheet.getRow(count).getCell(CellReference.convertColStringToIndex("B")));
+            accountsList.put(loanSn, accountSn);
             count += 1;
         }
         return accountsList;
@@ -89,7 +90,7 @@ public class ExcelReader {
         Workbook workbook = WorkbookFactory.create(convFile);
         //iterating over rows and columns
         Sheet sheet = workbook.getSheetAt(0);
-        Map<String, Object> accountsList= new HashMap<>();
+        Map<String, Object> accountsList = new HashMap<>();
         int count = 0;
         for (Row row : sheet) {
             if (isRowEmpty(row)) continue;
