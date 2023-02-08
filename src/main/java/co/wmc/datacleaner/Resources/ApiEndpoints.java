@@ -67,7 +67,7 @@ public class ApiEndpoints {
                 CustomResponse.builder()
                         .httpStatus(HttpStatus.OK.value())
                         .data(data)
-                        .message("Successflly Loaded")
+                        .message("Successfully Loaded")
                         .build()
         );
     }
