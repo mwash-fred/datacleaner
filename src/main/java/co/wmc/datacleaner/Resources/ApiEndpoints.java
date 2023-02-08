@@ -61,7 +61,7 @@ public class ApiEndpoints {
         for (String key : data.keySet()) {
             //Update Accounts
             double keyValue = Double.parseDouble(key);
-            customEntity.updateLoansWithAccountSn((int) keyValue,Integer.parseInt((String) data.get(key)));
+            customEntity.updateLoansWithAccountSn((int) keyValue,(Integer) data.get(key));
         }
 
         return ResponseEntity.ok().body(
