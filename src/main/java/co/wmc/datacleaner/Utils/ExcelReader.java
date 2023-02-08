@@ -1,10 +1,12 @@
 package co.wmc.datacleaner.Utils;
 
 import io.micrometer.common.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +17,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 
-@Component
+@Component @Slf4j
 public class ExcelReader {
 
     @Value("${file.upload.store}")
@@ -68,8 +70,10 @@ public class ExcelReader {
                     return null;
                 };
 
+                log.info("Value {}", sheet.getRow(count).getCell(CellReference.convertColStringToIndex("B")).getCellType());
+
                 String loanSn = String.valueOf(numericValues.apply(sheet.getRow(count).getCell(CellReference.convertColStringToIndex("A"))));
-                String accountSn = String.valueOf(numericValues.apply(sheet.getRow(count).getCell(1)));
+                Double accountSn = numericValues.apply(sheet.getRow(count).getCell(CellReference.convertColStringToIndex("B")));
                 accountsList.put(loanSn, accountSn);
             count += 1;
         }
