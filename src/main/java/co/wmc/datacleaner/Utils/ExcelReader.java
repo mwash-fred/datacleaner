@@ -69,7 +69,7 @@ public class ExcelReader {
                 };
 
                 String loanSn = String.valueOf(numericValues.apply(sheet.getRow(count).getCell(CellReference.convertColStringToIndex("A"))));
-                String accountSn = String.valueOf(numericValues.apply(sheet.getRow(count).getCell(CellReference.convertColStringToIndex("B"))));
+                String accountSn = String.valueOf(numericValues.apply(sheet.getRow(count).getCell(1)));
                 accountsList.put(loanSn, accountSn);
             count += 1;
         }
