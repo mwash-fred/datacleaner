@@ -58,10 +58,11 @@ public class ApiEndpoints {
     @PostMapping("loan-account-sn")
     public ResponseEntity<?> updateLoanWithAcountSn(@RequestParam("file") MultipartFile file) throws SQLException, IOException {
         Map<String, Object> data = excelReader.loanAccountsSn(file);
-//        for (String key : data.keySet()) {
-//            //Update Accounts
-//            customEntity.updateLoansWithAccountSn(Integer.parseInt(key), Integer.parseInt((String) data.get(key)));
-//        }
+        for (String key : data.keySet()) {
+            //Update Accounts
+            double keyValue = Double.parseDouble(key);
+            customEntity.updateLoansWithAccountSn((int) keyValue,Integer.parseInt((String) data.get(key)));
+        }
 
         return ResponseEntity.ok().body(
                 CustomResponse.builder()
