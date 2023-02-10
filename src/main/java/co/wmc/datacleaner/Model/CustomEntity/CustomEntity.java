@@ -22,6 +22,9 @@ public class CustomEntity {
     @Value("${custom.sql.disbursementdate}")
     private String disbursementDateQuery;
 
+    @Value("${custom.sql.applicationdate}")
+    private String applicationDateQuery;
+
     @Value("${custom.sql.accountsn}")
     private String selectAccountSn;
 
@@ -42,6 +45,12 @@ public class CustomEntity {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = formatter.format(disbursementDate);
         connector.connection(disbursementDateQuery, QueryType.UPDATE, true, List.of(dateString,String.valueOf(accountSn)));
+    }
+
+    public void updateApplicationDate(int accountSn, Date disbursementDate) throws SQLException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = formatter.format(disbursementDate);
+        connector.connection(applicationDateQuery, QueryType.UPDATE, true, List.of(dateString,String.valueOf(accountSn)));
     }
 
     public void updateLoansWithAccountSn(int loanSn, int accountSn) throws SQLException {

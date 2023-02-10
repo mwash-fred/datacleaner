@@ -55,6 +55,24 @@ public class ApiEndpoints {
         );
     }
 
+    @PostMapping("disbursement-upload")
+    public ResponseEntity<?> applicationDates(@RequestParam("file")MultipartFile file) throws SQLException, IOException {
+        Map<String, Object> data = excelReader.disbursemetDateHandler(file);
+        for (String key : data.keySet()) {
+            //Get Account Sn
+            int accountSn = Integer.parseInt(String.valueOf(customEntity.getAccoutSn(key).stream().findFirst().get()));
+            //Update Accounts
+            customEntity.updateApplicationDate(accountSn, (Date) data.get(key));
+        }
+
+        return ResponseEntity.ok().body(
+                CustomResponse.builder()
+                        .httpStatus(HttpStatus.OK.value())
+                        .message("Successflly Loaded")
+                        .build()
+        );
+    }
+
     @PostMapping("loan-account-sn")
     public ResponseEntity<?> updateLoanWithAcountSn(@RequestParam("file") MultipartFile file) throws SQLException, IOException {
         Map<String, Object> data = excelReader.loanAccountsSn(file);
