@@ -55,7 +55,7 @@ public class ApiEndpoints {
         );
     }
 
-    @PostMapping("disbursement-upload")
+    @PostMapping("application-upload")
     public ResponseEntity<?> applicationDates(@RequestParam("file")MultipartFile file) throws SQLException, IOException {
         Map<String, Object> data = excelReader.disbursemetDateHandler(file);
         for (String key : data.keySet()) {
